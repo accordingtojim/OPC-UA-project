@@ -14,25 +14,35 @@ from opcua.ua.uaprotocol_auto import VariableAttributes
 
 from opcua.ua.uaerrors import UaError, BadTimeout, BadNoSubscription, BadSessionClosed
 from opcua.common.connection import SecureConnection
-#from my_library import *
-#-----------------------------------------------------------#
-# connecting to am OPC-UA server
-#-----------------------------------------------------------#
+
+#-------------------------------------------------------------
+#CONNECTING TO AN OPC-UA SERVER
 
 url = "opc.tcp://192.168.0.53:59611"
-# url = "opc.tcp://192.168.100.96:4840"
 client = Client(url)
 
-#--------------------------------------------------------------------
-
+#-------------------------------------------------------------
 #EXCEL SHEET MANAGEMENT
+
 wb = Workbook()
-filepath = "C:/Users/jimmy.carradore/Desktop/test/sample.xlsx"
+filepath = "C:\Users\jimmy.carradore\Documents\GitHub\OPC-UA-project\sample.xlsx"
 wb = load_workbook(filepath)
 sheet = wb.active
 counter = 1
 
-#--------------------------------------------------------------------------
+#--------------------------------------------------------------
+#CLEARING THE EXCEL FILE
+
+def remove(sheet):
+    # iterate the row object
+    wb.delete_row(1)  
+    return
+    # get the row number from the first cell
+    # and remove the row
+    
+
+#-----------------------------------------------------------------------------
+
 
 root = client.get_root_node()
 #print("Root node is: ", str(root))
@@ -53,7 +63,6 @@ def build_opc_tree(node):
             h = h + 1
             if childClass == ua.NodeClass.Object:
                 build_opc_tree(child_ref)
-
         return
 #--------------------------------------------------------------------------
 
@@ -138,6 +147,7 @@ try:
         # sheet.cell(row = 1 , column = (182)).value = sensor_value
         # wb.save(filepath)
 #---------------------------end debug------------------------------------------#
+        print(len(node_list))
         for j in range(55 , 213):
             if j == 181 or j ==182 :
                 continue
