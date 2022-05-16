@@ -1,17 +1,16 @@
 programName = 'create_opcua_client_2'
 
 # Create Test Client Machine 2:
+from asyncio.windows_events import NULL
 from platform import node
 from re import S
 from openpyxl import workbook
 from openpyxl.workbook import Workbook
 from openpyxl.reader.excel import load_workbook
 import openpyxl
-
 from opcua import Client, ua
 import time
 from opcua.ua.uaprotocol_auto import VariableAttributes
-
 from opcua.ua.uaerrors import UaError, BadTimeout, BadNoSubscription, BadSessionClosed
 from opcua.common.connection import SecureConnection
 
@@ -20,91 +19,63 @@ from opcua.common.connection import SecureConnection
 
 url = "opc.tcp://192.168.0.53:59611"
 client = Client(url)
+root = client.get_root_node()
 
 #-------------------------------------------------------------
 #EXCEL SHEET MANAGEMENT
 
 wb = Workbook()
-filepath = "C:\Users\jimmy.carradore\Documents\GitHub\OPC-UA-project\sample.xlsx"
+filepath = "C:/Users/jimmy.carradore/Documents/GitHub/OPC-UA-project/sample.xlsx"
 wb = load_workbook(filepath)
 sheet = wb.active
 counter = 1
+#ws = wb['test1']
 
 #--------------------------------------------------------------
 #CLEARING THE EXCEL FILE
 
-def remove(sheet):
-    # iterate the row object
-    wb.delete_row(1)  
-    return
-    # get the row number from the first cell
-    # and remove the row
+def clear_excel():
+    for i in range(1 , 1000):
+        if sheet.cell(row = 1 , column = i).value == '':
+            return
+        sheet.cell(row = 1 , column = i).value = '' 
+    wb.save(filepath) 
+    wb.close()
     
-
 #-----------------------------------------------------------------------------
+#BUILDING TREE OF EACH NODE IN THE SERVER
 
-
-root = client.get_root_node()
-#print("Root node is: ", str(root))
 def build_opc_tree(node):
-        nodeClass = node.get_node_class()
-        #print('\n#--------------------------------------------------------------#')
-        #print('\nnode', node, 'has class', nodeClass)
-
-        children  = node.get_children()
-        #print('\tchildren of node', node, '=', len(children))
-        #print('\t', children)
-        h = 0
-        for child in children:
-            child_ref = client.get_node(child)
-            childClass = child_ref.get_node_class()
-            #print('\t', h, '- child', child_ref, 'has class', childClass)
-            node_list.append([node, nodeClass, child_ref, childClass])
-            h = h + 1
-            if childClass == ua.NodeClass.Object:
-                build_opc_tree(child_ref)
-        return
+    nodeClass = node.get_node_class()
+    #print('\n#--------------------------------------------------------------#')
+    #print('\nnode', node, 'has class', nodeClass)
+    children  = node.get_children()
+    #print('\tchildren of node', node, '=', len(children))
+    #print('\t', children)
+    h = 0
+    for child in children:
+        child_ref = client.get_node(child)
+        childClass = child_ref.get_node_class()
+        #print('\t', h, '- child', child_ref, 'has class', childClass)
+        node_list.append([node, nodeClass, child_ref, childClass])
+        h = h + 1
+        if childClass == ua.NodeClass.Object:
+            build_opc_tree(child_ref)
+    return
 #--------------------------------------------------------------------------
 
 flag_string = False
 i = 0
 s = 2
+
+
 try:
     client.set_user("admin")
     client.set_password("admin")
     client.connect()
     print("Client Connected to server OK")
 
-    # client.connect_socket()
-    # cfs = client.connect_and_find_servers()
-    # print("Client Socket Connected to server OK")
-    # print("we got:", cfs)
-
-    # uri = "FANUCOPC.SERVER.0"
-    # idx = client.get_namespace_index(uri)
-    # print('idx = ', idx)
-
-    # client.create_session()
-    # print("Client Session created")
-
-    # client.activate_session(username='admin', password='admin', certificate=None)
-    # print("Client Session activated")
-    
-   # children = node.get_children()
-    #print("Children node are: ",str(children))
-    #print("Children node are: ",children[1])
-    #child_ref = client.get_node(children[1])
-    #print("Child ref is : ",child_ref)
-    #childClass = child_ref.get_node_class()
-    #print("Child Class is : ",childClass)
-    #print(str(childClass==ua.NodeClass.Object))
-
-
-#------------------------------------------------------------------------
-
-    
-#-----------------------------------------------------------------------
-
+#--------------------------------------------------------------------------
 
     while True:
         counter=counter+1
