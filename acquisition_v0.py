@@ -52,21 +52,17 @@ def build_opc_tree(node):
     children  = node.get_children()
     #print('\tchildren of node', node, '=', len(children))
     #print('\t', children)
-    h = 0
     for child in children:
         child_ref = client.get_node(child)
         childClass = child_ref.get_node_class()
         #print('\t', h, '- child', child_ref, 'has class', childClass)
         node_list.append([node, nodeClass, child_ref, childClass])
-        h = h + 1
         if childClass == ua.NodeClass.Object:
             build_opc_tree(child_ref)
     return
 #--------------------------------------------------------------------------
 
 flag_string = False
-i = 0
-s = 2
 #debug
 
 try:
@@ -86,31 +82,34 @@ try:
 
         node_list = []
         node_dict = {}
-        iter = 0
+        i = 1
+        s = 1
 
         build_opc_tree(root)
         #print("NODE LIST IS : ", node_list)
         #print("NODE LIST 2 : ", str(node_list[2]))
         #node_ex=set()
         #print('the node list is: ','\t',node_list)
+        #print('the length is ', len(node_list))
         # for iter in node_list:
         #     #print('\n' , i , iter)
         #     i = i + 1
         # print("node list :", node_list )
         if flag_string == False:
-            for j in range(55 , 213):
+            for j in range(1 ,len(node_list)):
             # if flag_string == True:
             # node_ex = client.get_node(node_list[j][2])
             # sensor_value = node_ex.get_value()
             # sheet.cell(row = (j-53) , column = s).value = sensor_value
-                i = i + 1
-                #print(str(node_list [100] [2]))
+            #print(str(node_list [100] [2]))
                 list = str(client.get_node(node_list[j][2])).split(".")
-                list_deb = str(list [1])
-                sheet.cell(row = 1 , column = i).value = list_deb
+                if str(list[0]) == "AW-24T4":
+                #list_deb = str(list [1])
+                    sheet.cell(row = 1 , column = i).value = str(list[1])
+                    i = i + 1
                 #print(list_deb)
         flag_string == True
-        wb.save(filepath) 
+        
 #---------------------------start debug----------------------------------------#
 
         # node_ex = client.get_node(node_list[182][2])
@@ -118,17 +117,15 @@ try:
         # sheet.cell(row = 1 , column = (182)).value = sensor_value
         # wb.save(filepath)
 #---------------------------end debug------------------------------------------#
-        print(len(node_list))
-        for j in range(55 , 213):
-            if j == 181 or j ==182 :
-                continue
-            else:
-                node_ex = client.get_node(node_list[j][2])
-                sensor_value = node_ex.get_value()
-                sheet.cell(row = s , column = (j-54)).value = sensor_value
-                wb.save(filepath)
-                #print(sensor_value)
-        s = s + 1
+        #print(len(node_list))
+        for j in range(1 , len(node_list)):
+            list = str(client.get_node(node_list[j][2])).split(".")
+            if str(list[0]) == "AW-24T4":
+                #list_deb = str(list [1])
+                sheet.cell(row = 2 , column = s).value = str(list[1])
+                s = s + 1
+        wb.save(filepath) 
+            
 
         
         #flag_string = True
