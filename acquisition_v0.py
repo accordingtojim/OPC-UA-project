@@ -67,7 +67,7 @@ def build_opc_tree(node):
 flag_string = False
 i = 0
 s = 2
-
+#debug
 
 try:
     client.set_user("admin")
