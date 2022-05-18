@@ -65,6 +65,9 @@ def build_opc_tree(node):
 flag_string = False
 #debug
 
+clear_excel()
+s = 2
+i = 1
 try:
     client.set_user("admin")
     client.set_password("admin")
@@ -73,8 +76,10 @@ try:
 
 #--------------------------------------------------------------------------
 
+
     while True:
         counter=counter+1
+        s = s + 1
         # print('#------------------------------------#')
         # print('#          starting while cycle      #')
         # print('#------------------------------------#')
@@ -82,8 +87,8 @@ try:
 
         node_list = []
         node_dict = {}
-        i = 1
-        s = 1
+        counter = 1
+        
 
         build_opc_tree(root)
         #print("NODE LIST IS : ", node_list)
@@ -96,19 +101,28 @@ try:
         #     i = i + 1
         # print("node list :", node_list )
         if flag_string == False:
-            for j in range(1 ,len(node_list)):
+            indexes = []
+            for j in range(0 ,len(node_list)-1):
             # if flag_string == True:
             # node_ex = client.get_node(node_list[j][2])
             # sensor_value = node_ex.get_value()
             # sheet.cell(row = (j-53) , column = s).value = sensor_value
             #print(str(node_list [100] [2]))
-                list = str(client.get_node(node_list[j][2])).split(".")
-                if str(list[0]) == "AW-24T4":
-                #list_deb = str(list [1])
-                    sheet.cell(row = 1 , column = i).value = str(list[1])
-                    i = i + 1
+                if '.' in str(client.get_node(node_list[j][2])):
+                    list = str(client.get_node(node_list[j][2])).split(".")
+                    #debug
+                    if 'AW24-T4' in list[0]:
+                        if ('ALARM' in list[1]) or  ('OPERATOR'in list[1]):
+                            print(list[1])
+                            continue    
+                        else:
+                            indexes.append(j)
+                        sheet.cell(row = 1 , column = i).value = str(list[1])
+                        i = i + 1
+                        wb.save(filepath)
                 #print(list_deb)
-        flag_string == True
+        #print(indexes)       
+        flag_string = True
         
 #---------------------------start debug----------------------------------------#
 
@@ -118,12 +132,12 @@ try:
         # wb.save(filepath)
 #---------------------------end debug------------------------------------------#
         #print(len(node_list))
-        for j in range(1 , len(node_list)):
-            list = str(client.get_node(node_list[j][2])).split(".")
-            if str(list[0]) == "AW-24T4":
-                #list_deb = str(list [1])
-                sheet.cell(row = 2 , column = s).value = str(list[1])
-                s = s + 1
+        s = 2
+        for j in indexes:
+            node_ex = client.get_node(node_list[j][2])
+            sensor_value = node_ex.get_value()
+            sheet.cell(row = s , column = counter).value = sensor_value
+            counter = counter + 1
         wb.save(filepath) 
             
 
