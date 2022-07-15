@@ -17,9 +17,9 @@ from opcua.common.connection import SecureConnection
 #-------------------------------------------------------------
 #CONNECTING TO AN OPC-UA SERVER
 
-url = "opc.tcp://192.168.0.53:59611"
-client = Client(url)
-root = client.get_root_node()
+url1 = "opc.tcp://192.168.0.53:59611"
+client1 = Client(url1)
+root1 = client1.get_root_node()
 
 #-------------------------------------------------------------
 #EXCEL SHEET MANAGEMENT
@@ -38,7 +38,7 @@ def clear_excel():
     for i in range(1 , 1000):
         if sheet.cell(row = 1 , column = i).value == '':
             return
-        sheet.cell(row = 1 , column = i).value = '' 
+        else: sheet.cell(row = 1 , column = i).value = '' 
     wb.save(filepath) 
     wb.close()
     
@@ -53,7 +53,7 @@ def build_opc_tree(node):
     #print('\tchildren of node', node, '=', len(children))
     #print('\t', children)
     for child in children:
-        child_ref = client.get_node(child)
+        child_ref = client1.get_node(child)
         childClass = child_ref.get_node_class()
         #print('\t', h, '- child', child_ref, 'has class', childClass)
         node_list.append([node, nodeClass, child_ref, childClass])
@@ -69,9 +69,9 @@ clear_excel()
 s = 2
 i = 1
 try:
-    client.set_user("admin")
-    client.set_password("admin")
-    client.connect()
+    client1.set_user("admin")
+    client1.set_password("admin")
+    client1.connect()
     print("Client Connected to server OK")
 
 #--------------------------------------------------------------------------
@@ -90,7 +90,7 @@ try:
         counter = 1
         
 
-        build_opc_tree(root)
+        build_opc_tree(root1)
         #print("NODE LIST IS : ", node_list)
         #print("NODE LIST 2 : ", str(node_list[2]))
         #node_ex=set()
@@ -108,8 +108,8 @@ try:
             # sensor_value = node_ex.get_value()
             # sheet.cell(row = (j-53) , column = s).value = sensor_value
             #print(str(node_list [100] [2]))
-                if '.' in str(client.get_node(node_list[j][2])):
-                    list = str(client.get_node(node_list[j][2])).split(".")
+                if '.' in str(client1.get_node(node_list[j][2])):
+                    list = str(client1.get_node(node_list[j][2])).split(".")
                     #debug
                     if 'AW24-T4' in list[0]:
                         if ('ALARM' in list[1]) or  ('OPERATOR'in list[1]):
@@ -134,7 +134,7 @@ try:
         #print(len(node_list))
         s = 2
         for j in indexes:
-            node_ex = client.get_node(node_list[j][2])
+            node_ex = client1.get_node(node_list[j][2])
             sensor_value = node_ex.get_value()
             sheet.cell(row = s , column = counter).value = sensor_value
             counter = counter + 1
