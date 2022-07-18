@@ -21,6 +21,10 @@ url1 = "opc.tcp://192.168.0.53:59611"
 client1 = Client(url1)
 root1 = client1.get_root_node()
 
+url2 = "opc.tcp://192.168.1.11:59611"
+client2 = Client(url2)
+root2 = client2.get_root_node()
+
 #-------------------------------------------------------------
 #EXCEL SHEET MANAGEMENT
 
@@ -72,13 +76,18 @@ try:
     client1.set_user("admin")
     client1.set_password("admin")
     client1.connect()
-    print("Client Connected to server OK")
+    print("Client1 Connected to server OK")
+
+    client2.set_user("admin")
+    client2.set_password("admin")
+    client2.connect()
+    print("Client2 Connected to server OK")
 
 #--------------------------------------------------------------------------
 
 
     while True:
-        counter=counter+1
+        counter = counter + 1
         s = s + 1
         # print('#------------------------------------#')
         # print('#          starting while cycle      #')
@@ -91,6 +100,9 @@ try:
         
 
         build_opc_tree(root1)
+        node_list1 = node_list[]
+        build_opc_tree(root2)
+        node_list2 = node_list[]
         #print("NODE LIST IS : ", node_list)
         #print("NODE LIST 2 : ", str(node_list[2]))
         #node_ex=set()
