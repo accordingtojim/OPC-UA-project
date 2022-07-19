@@ -38,37 +38,41 @@ def build_opc_tree(node,client):
             build_opc_tree(child_ref,client)
         return node_list
 
-        
+
 connection1 = Connection("opc.tcp://192.168.0.193:59611")
 connection1.set_usr_pwd("admin", "admin")
 print(build_opc_tree(connection1.root,connection1.client))
-# #connection2 = Connection("opc.tcp://192.168.0.193:59611")
-# print(connection1.root)
-# print(connection1.client)
 
-# #-------------------------------------------------------------
-# wb = []
-# #EXCEL SHEET MANAGEMENT
 
-# class Sheet_ex:
-#     def __init__(self,filepath,rows):
-#         self.filepath = filepath
-#         self.rows = rows
-#         self.wb = Workbook()
-#         #filepath = "C:/Users/jimmy.carradore/Documents/GitHub/OPC-UA-project/sample.xlsx"
-#         self.wb = load_workbook(filepath)
-#         self.sheet = self.wb.active
-#         self.counter = 1
-#         for i in range(1 , 1000):
-#             for j in range (1, rows+1): 
-#                 if self.sheet.cell(row = j , column = i).value == '':
-#                     return
-#                 else: self.sheet.cell(row = j , column = i).value = '' 
-#         self.wb.save(filepath) 
-#         self.wb.close()
-# #ws = wb['test1']
+#-------------------------------------------------------------
+wb = []
+#EXCEL SHEET MANAGEMENT
 
-# sheet_1 = Sheet_ex("C:/Users/jimmy.carradore/Documents/GitHub/OPC-UA-project/sample.xlsx",2)
+class Sheet_ex:
+    def __init__(self,filepath,rows):
+        self.filepath = filepath
+        self.rows = rows
+        self.load_sheet()
+        self.clean()
+    def load_sheet(self):
+        self.wb = Workbook()
+        #filepath = "C:/Users/jimmy.carradore/Documents/GitHub/OPC-UA-project/sample.xlsx"
+        self.wb = load_workbook(self.filepath)
+        self.sheet = self.wb.active
+        self.counter = 1
+    def clean(self): 
+        self.load_sheet()
+        for i in range(1 , 1000):
+            for j in range (1, self.rows + 1): 
+                if self.sheet.cell(row = j , column = i).value == '':
+                    return
+                else: self.sheet.cell(row = j , column = i).value = '' 
+    def save(self):
+        self.wb.save(self.filepath) 
+        self.wb.close()
+#ws = wb['test1']
+
+sheet_1 = Sheet_ex("C:/Users/jimmy.carradore/Documents/GitHub/OPC-UA-project/sample.xlsx",2)
 
 
     
