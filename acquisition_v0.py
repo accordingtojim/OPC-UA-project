@@ -74,8 +74,8 @@ class write:
                 sensor_value = node_ex.get_value()
                 self.sheet.cell(row = i , column = counter).value = sensor_value
                 counter = counter + 1
-                self.wb.save(filepath)
-                self.wb.close()
+        self.wb.save(filepath)
+        self.wb.close()
 
 
 class Sheet_ex:
