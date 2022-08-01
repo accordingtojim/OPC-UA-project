@@ -31,6 +31,8 @@ class Connection:
         self.client.set_password(password)
         self.client.connect()
         print("Client Connected to server OK")
+    def disconnect(self):
+        self.client.disconnect()
 def build_opc_tree_1(node,client):
         nodeClass = node.get_node_class()
         children  = node.get_children()
@@ -58,7 +60,7 @@ class write:
                 #debug
                 if 'AW24-T4' in list[0]:
                     if ('ALARM' in list[1]) or  ('OPERATOR'in list[1]):
-                        print(list[1])
+                        #print(list[1])
                         continue    
                     else:
                         self.indexes.append(j)
@@ -76,7 +78,6 @@ class write:
                 counter = counter + 1
         self.wb.save(filepath)
         self.wb.close()
-
 
 class Sheet_ex:
     def __init__(self,filepath,rows):
@@ -98,10 +99,6 @@ class Sheet_ex:
     def save(self):
         self.wb.save(self.filepath) 
         self.wb.close()
-
-
-
-
 #-----------------------------------------------------------------------------
 #HANDLE PASSWORD AND USER
 #--------------------------------------------------------------------------
@@ -116,11 +113,10 @@ node_list_1 = build_opc_tree_1(connection1.root,connection1.client)
 prova = write("C:/Users/jimmy.carradore/Documents/GitHub/OPC-UA-project/sample.xlsx")
 prova.writing_excel(connection1.client,node_list_1)
 sheet_1.load_sheet()
-prova.write_values(connection1.client,"C:/Users/jimmy.carradore/Documents/GitHub/OPC-UA-project/sample.xlsx",node_list_1,4)
-sheet_1.save()
-
-
-
+prova.write_values(connection1.client,"C:/Users/jimmy.carradore/Documents/GitHub/OPC-UA-project/sample.xlsx",node_list_1,6)
+#sheet_1.save()
+connection1.disconnect()
+quit()
 
 #--------------------------------------------------------------------------
 
